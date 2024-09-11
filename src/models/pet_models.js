@@ -1,34 +1,10 @@
-const pet = require('../models/pet.js');
+const mongoose = require('mongoose');
 
-const store = (req, res) => {
-    pet.create(req.body);
-    res.json();
-};
+const petSchema = new mongoose.Schema({
+  nome: { type: String, required: true },
+  endereco: { type: String, required: true },
+  telefones: [String],
+});
 
-const index = (req, res) => {
-    const content = pet.find().exec();
-    res.json(content);
-};
-
-const show = (req, rest) => {
-    const content = pet.findById(req.params.id).exec();
-    res.json(content);
-};
-
-const update = (req, res) => {
-    pet.findByIdAndUpdate(req.params.id, req.body).exec();
-    res.json();
-};
-
-const destroy = (req, res) => {
-    pet.findByIdAndDelete(req.params.id).exec();
-    res.json();
-};
-
-module.exports = {
-    store,
-    index,
-    show,
-    update,
-    destroy,
-};
+const pet = mongoose.model('pet', petSchema);
+module.exports = pet;

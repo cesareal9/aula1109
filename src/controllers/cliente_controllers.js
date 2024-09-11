@@ -1,34 +1,49 @@
-const cliente = require('../models/cliente.js');
+const cliente = require('../models/cliente_models.js');
 
-const store = (req, res) => {
-    cliente.create(req.body);
-    res.json();
+exports.createcliente = async (req, res) => {
+  try {
+    const cliente = new cliente(req.body);
+    await cliente.save();
+    res.status(201).json(cliente);
+  } catch (error) {
+    res.status(400).json({ error: 'Erro ao criar cliente' });
+  }
 };
 
-const index = (req, res) => {
-    const content = cliente.find().exec();
-    res.json(content);
+exports.getclientes = async (req, res) => {
+  try {
+    const clientes = await cliente.find();
+    res.status(200).json(clientes);
+  } catch (error) {
+    res.status(400).json({ error: 'Erro ao buscar clientes' });
+  }
 };
 
-const show = (req, rest) => {
-    const content = cliente.findById(req.params.id).exec();
-    res.json(content);
+exports.getclienteById = async (req, res) => {
+  try {
+    const cliente = await cliente.findById(req.params.id);
+    res.status(200).json(cliente);
+  } catch (error) {
+    res.status(404).json({ error: 'cliente não encontrado' });
+  }
 };
 
-const update = (req, res) => {
-    cliente.findByIdAndUpdate(req.params.id, req.body).exec();
-    res.json();
+
+//{ new: true } retorna o novo documento atualizado
+exports.updatecliente = async (req, res) => {
+  try {
+    const cliente = await cliente.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.status(200).json(cliente);
+  } catch (error) {
+    res.status(400).json({ error: 'Erro ao atualizar cliente' });
+  }
 };
 
-const destroy = (req, res) => {
-    cliente.findByIdAndDelete(req.params.id).exec();
-    res.json();
-};
-
-module.exports = {
-    store,
-    index,
-    show,
-    update,
-    destroy,
+exports.deletecliente = async (req, res) => {
+  try {
+    await cliente.findByIdAndDelete(req.params.id);
+    res.status(204).json();
+  } catch (error) {
+    res.status(400).json({ error: 'Erro ao deletar cliente' });
+  }
 };
