@@ -1,34 +1,11 @@
-const cliente = require('../models/cliente.js');
+const express = require('express');
+const router = express.Router();
+const cliente_controller = require('../controllers/cliente_controller.js');
 
-const store = (req, res) => {
-    cliente.create(req.body);
-    res.json();
-};
+router.post('/', cliente_controller.createCliente);
+router.get('/', cliente_controller.getClientes);
+router.get('/:id', cliente_controller.getClienteById);
+router.put('/:id', cliente_controller.updateCliente);
+router.delete('/:id', cliente_controller.deleteCliente);
 
-const index = (req, res) => {
-    const content = cliente.find().exec();
-    res.json(content);
-};
-
-const show = (req, rest) => {
-    const content = cliente.findById(req.params.id).exec();
-    res.json(content);
-};
-
-const update = (req, res) => {
-    cliente.findByIdAndUpdate(req.params.id, req.body).exec();
-    res.json();
-};
-
-const destroy = (req, res) => {
-    cliente.findByIdAndDelete(req.params.id).exec();
-    res.json();
-};
-
-module.exports = {
-    store,
-    index,
-    show,
-    update,
-    destroy,
-};
+module.exports = router;
